@@ -4,7 +4,7 @@
 
 int m_loadCount = 0;
 
-VideoStringSequence m_videoStringSequence;
+VideoStringSequence m_videoStringSequence{};
 
 size_t GetTotalStrlen(const std::vector<const char*> strs)
 {
@@ -80,7 +80,7 @@ void Mel_MsgRequestStartLoadingMidAsmHook(PPCRegister& pThis, PPCRegister& r4)
     std::bernoulli_distribution scrollingTextDist(0.5);
 
     // Randomly change loading screen to use scrolling text variant.
-    // TODO: fix this being inconsistent.
+    // TODO (Hyper): fix this being inconsistent.
     if (scrollingTextDist(rng) && *pType == 3)
         *pType = 0;
 
@@ -100,6 +100,7 @@ void Mel_MsgRequestStartLoadingMidAsmHook(PPCRegister& pThis, PPCRegister& r4)
     FreeStringPool();
 
 #if BAD_APPLE
+    // TODO (Hyper): nullify chances of this occurring until after a specific stage?
     std::bernoulli_distribution badAppleDist(m_videoStringSequence.IsFinished ? 0 : 0.25);
 
     if (badAppleDist(rng))
@@ -141,7 +142,7 @@ bool Mel_VideoStringSequenceWaitMidAsmHook(PPCRegister& pThis)
 {
     auto type = *(be<uint32_t>*)g_memory.Translate(pThis.u32 + 0x138);
 
-    // TODO: mute game audio whilst playing.
+    // TODO (Hyper): mute game audio whilst playing.
     if (type == 0)
         return m_videoStringSequence.IsPlaying();
 
@@ -157,14 +158,12 @@ void Mel_SetLoadingStringsMidAsmHook(PPCRegister& pThis, PPCRegister& pCSDText, 
     if (outroTime > 0.0f && outroTime < 0.01f)
         m_loadCount = 0;
 
-#if BAD_APPLE
     if (m_videoStringSequence.IsPlaying())
     {
         m_videoStringSequence.Update(deltaTime);
 
         *pScrollIndex = 0;
     }
-#endif
 
     if (!m_stringPoolSize)
         return;
