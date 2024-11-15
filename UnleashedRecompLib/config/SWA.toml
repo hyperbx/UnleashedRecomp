@@ -1105,3 +1105,19 @@ registers = ["r3"]
 name = "DisableBoostFilterMidAsmHook"
 address = 0x82B48C9C
 registers = ["r11"]
+
+[[midasm_hook]]
+name = "Mel_MsgRequestStartLoadingMidAsmHook"
+address = 0x824DDEE0
+registers = ["r3", "r4"]
+
+[[midasm_hook]]
+name = "Mel_VideoStringSequenceWaitMidAsmHook"
+address = 0x824DB068
+registers = ["r31"]
+jump_address_on_true = 0x824DB098
+
+[[midasm_hook]]
+name = "Mel_SetLoadingStringsMidAsmHook"
+address = 0x824DB1CC
+registers = ["r31", "r4", "r25", "r30"]
