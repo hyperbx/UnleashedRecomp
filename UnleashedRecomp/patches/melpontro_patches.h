@@ -158,7 +158,8 @@ std::vector<const char*> m_singleStringSequences =
     "This is RPCS3",
     "Coo...",
     "I'm something of a scientist myself.",
-    "I'M WITH THE SCIENCE TEAM"
+    "I'M WITH THE SCIENCE TEAM",
+    "imgui sega balls!"
 };
 
 std::vector<MultiStringSequence> m_multiStringSequences =
