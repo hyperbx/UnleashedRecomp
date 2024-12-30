@@ -140,6 +140,7 @@ set(UNLEASHED_RECOMP_PATCHES_CXX_SOURCES
     "patches/frontend_listener.cpp"
     "patches/input_patches.cpp"
     "patches/inspire_patches.cpp"
+    "patches/melpontro_patches.cpp"
     "patches/misc_patches.cpp"
     "patches/object_patches.cpp"
     "patches/player_patches.cpp"
@@ -561,3 +562,10 @@ BIN2C(TARGET_OBJ UnleashedRecomp SOURCE_FILE "${RESOURCES_SOURCE_PATH}/sounds/sy
 BIN2C(TARGET_OBJ UnleashedRecomp SOURCE_FILE "${RESOURCES_SOURCE_PATH}/sounds/sys_actstg_pausedecide.ogg" DEST_FILE "${RESOURCES_OUTPUT_PATH}/sounds/sys_actstg_pausedecide.ogg" ARRAY_NAME "g_sys_actstg_pausedecide")
 BIN2C(TARGET_OBJ UnleashedRecomp SOURCE_FILE "${RESOURCES_SOURCE_PATH}/sounds/sys_actstg_pausewinclose.ogg" DEST_FILE "${RESOURCES_OUTPUT_PATH}/sounds/sys_actstg_pausewinclose.ogg" ARRAY_NAME "g_sys_actstg_pausewinclose")
 BIN2C(TARGET_OBJ UnleashedRecomp SOURCE_FILE "${RESOURCES_SOURCE_PATH}/sounds/sys_actstg_pausewinopen.ogg" DEST_FILE "${RESOURCES_OUTPUT_PATH}/sounds/sys_actstg_pausewinopen.ogg" ARRAY_NAME "g_sys_actstg_pausewinopen")
+
+## Melpontro ##
+BIN2C(TARGET_OBJ UnleashedRecomp SOURCE_FILE "${RESOURCES_OUTPUT_PATH}/melpontro/sounds/sndAmongUs.ogg" DEST_FILE "${RESOURCES_OUTPUT_PATH}/melpontro/sounds/sndAmongUs.ogg" ARRAY_NAME "g_sndAmongUs")
+BIN2C(TARGET_OBJ UnleashedRecomp SOURCE_FILE "${RESOURCES_OUTPUT_PATH}/melpontro/sounds/sndBadApple.ogg" DEST_FILE "${RESOURCES_OUTPUT_PATH}/melpontro/sounds/sndBadApple.ogg" ARRAY_NAME "g_sndBadApple")
+BIN2C(TARGET_OBJ UnleashedRecomp SOURCE_FILE "${RESOURCES_OUTPUT_PATH}/melpontro/sounds/sndSans.ogg" DEST_FILE "${RESOURCES_OUTPUT_PATH}/melpontro/sounds/sndSans.ogg" ARRAY_NAME "g_sndSans")
+BIN2C(TARGET_OBJ UnleashedRecomp SOURCE_FILE "${RESOURCES_OUTPUT_PATH}/melpontro/sounds/sndVineBoom.ogg" DEST_FILE "${RESOURCES_OUTPUT_PATH}/melpontro/sounds/sndVineBoom.ogg" ARRAY_NAME "g_sndVineBoom")
+BIN2C(TARGET_OBJ UnleashedRecomp SOURCE_FILE "${RESOURCES_OUTPUT_PATH}/melpontro/sounds/sndXboxNotify.ogg" DEST_FILE "${RESOURCES_OUTPUT_PATH}/melpontro/sounds/sndXboxNotify.ogg" ARRAY_NAME "g_sndXboxNotify")

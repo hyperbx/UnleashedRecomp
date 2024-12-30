@@ -9,8 +9,11 @@
 
 void Game_PlaySound(const char* pName)
 {
-    if (EmbeddedPlayer::s_isActive)
+    if (!App::s_isInit)
     {
+        if (!EmbeddedPlayer::s_isActive)
+            return;
+
         EmbeddedPlayer::Play(pName);
     }
     else

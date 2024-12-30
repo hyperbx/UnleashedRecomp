@@ -1,10 +1,15 @@
-#include <cpu/guest_code.h>
-#include "api/SWA.h"
 #include "melpontro_patches.h"
+#include <api/SWA.h>
+#include <cpu/guest_code.h>
+#include <os/logger.h>
+#include <app.h>
 
-int m_loadCount = 0;
+uint32_t g_pStringPool;
+uint32_t g_stringPoolSize;
 
-VideoStringSequence m_videoStringSequence{};
+int g_loadCount = 0;
+
+VideoStringSequence g_videoStringSequence{};
 
 size_t GetTotalStrlen(const std::vector<const char*> strs)
 {
@@ -18,8 +23,6 @@ size_t GetTotalStrlen(const std::vector<const char*> strs)
 
 void CreateStringPool(const std::vector<const char*> strs)
 {
-    printf("[*] ALLOCATING STRING POOL\n");
-
     void* pStrMemory = __HH_ALLOC(GetTotalStrlen(strs));
     void* pTblMemory = __HH_ALLOC(strs.size() * 4);
 
@@ -29,7 +32,7 @@ void CreateStringPool(const std::vector<const char*> strs)
     for (const char* str : strs)
     {
         auto pStr = (char*)((size_t)pStrMemory + poolLength);
-        table.push_back(std::byteswap(g_memory.MapVirtual(pStr)));
+        table.push_back(ByteSwap(g_memory.MapVirtual(pStr)));
         strcpy(pStr, str);
         poolLength += strlen(str) + 1;
     }
@@ -42,23 +45,21 @@ void CreateStringPool(const std::vector<const char*> strs)
         tableLength += 4;
     }
 
-    m_pStringPool = g_memory.MapVirtual(pTblMemory);
-    m_stringPoolSize = table.size();
+    g_pStringPool = g_memory.MapVirtual(pTblMemory);
+    g_stringPoolSize = table.size();
 }
 
 void FreeStringPool()
 {
-    if (!m_pStringPool)
+    if (!g_pStringPool)
         return;
 
-    printf("[*] FREEING STRING POOL\n");
-
     // Free string pool and offsets.
-    __HH_FREE((void*)((be<uint32_t>*)g_memory.Translate(m_pStringPool))->get());
-    __HH_FREE((void*)m_pStringPool);
+    __HH_FREE(((be<uint32_t>*)g_memory.Translate(g_pStringPool))->get());
+    __HH_FREE(g_pStringPool);
 
-    m_pStringPool = 0;
-    m_stringPoolSize = 0;
+    g_pStringPool = 0;
+    g_stringPoolSize = 0;
 }
 
 std::mt19937 GetRandom()
@@ -75,7 +76,7 @@ void Mel_MsgRequestStartLoadingMidAsmHook(PPCRegister& pThis, PPCRegister& r4)
     auto pType = (be<uint32_t>*)g_memory.Translate(r4.u32 + 0x18);
     auto rng = GetRandom();
 
-    printf("[*] Loading type: %d\n", pType->get());
+    LOGFN("Loading type: {}", pType->get());
 
     std::bernoulli_distribution scrollingTextDist(0.5);
 
@@ -86,7 +87,7 @@ void Mel_MsgRequestStartLoadingMidAsmHook(PPCRegister& pThis, PPCRegister& r4)
 
     if (*pType == 0)
     {
-        m_loadCount++;
+        g_loadCount++;
     }
     else
     {
@@ -94,57 +95,54 @@ void Mel_MsgRequestStartLoadingMidAsmHook(PPCRegister& pThis, PPCRegister& r4)
     }
 
     // Prevent additional calls with type 0 running this code.
-    if (m_loadCount > 1)
+    if (g_loadCount > 1)
         return;
 
     FreeStringPool();
 
-#if BAD_APPLE
     // TODO (Hyper): nullify chances of this occurring until after a specific stage?
-    std::bernoulli_distribution badAppleDist(m_videoStringSequence.IsFinished ? 0 : 0.25);
+    std::bernoulli_distribution badAppleDist(g_videoStringSequence.IsFinished ? 0 : 0.25);
 
     if (badAppleDist(rng))
     {
-        m_videoStringSequence = BadAppleSequence();
-        m_videoStringSequence.Play();
+        g_videoStringSequence = BadAppleSequence();
+        g_videoStringSequence.Play();
     }
     else
-#endif
     {
         std::bernoulli_distribution singleOrMultiDist(0.5);
 
         if (singleOrMultiDist(rng))
         {
-            std::shuffle(m_multiStringSequences.begin(), m_multiStringSequences.end(), rng);
+            std::shuffle(g_multiStringSequences.begin(), g_multiStringSequences.end(), rng);
 
-            CreateStringPool(m_multiStringSequences[0].Strings);
+            CreateStringPool(g_multiStringSequences[0].Strings);
 
-            if (m_multiStringSequences[0].Callback)
-                m_multiStringSequences[0].Callback();
+            if (g_multiStringSequences[0].Callback)
+                g_multiStringSequences[0].Callback();
         }
         else
         {
-            std::shuffle(m_singleStringSequences.begin(), m_singleStringSequences.end(), rng);
+            std::shuffle(g_singleStringSequences.begin(), g_singleStringSequences.end(), rng);
         
-            CreateStringPool(m_singleStringSequences);
+            CreateStringPool(g_singleStringSequences);
         }
     }
 
-    if (!m_stringPoolSize)
+    if (!g_stringPoolSize)
         return;
 
     auto pScrollIndex = (be<uint32_t>*)g_memory.Translate(pThis.u32 + 0x124);
 
-    *pScrollIndex = m_stringPoolSize - (m_stringPoolSize / 4);
+    *pScrollIndex = g_stringPoolSize - (g_stringPoolSize / 4);
 }
 
 bool Mel_VideoStringSequenceWaitMidAsmHook(PPCRegister& pThis)
 {
     auto type = *(be<uint32_t>*)g_memory.Translate(pThis.u32 + 0x138);
 
-    // TODO (Hyper): mute game audio whilst playing.
     if (type == 0)
-        return m_videoStringSequence.IsPlaying();
+        return g_videoStringSequence.IsPlaying();
 
     return false;
 }
@@ -156,19 +154,19 @@ void Mel_SetLoadingStringsMidAsmHook(PPCRegister& pThis, PPCRegister& pCSDText, 
     auto pScrollIndex = (be<uint32_t>*)g_memory.Translate(pThis.u32 + 0x124);
 
     if (outroTime > 0.0f && outroTime < 0.01f)
-        m_loadCount = 0;
+        g_loadCount = 0;
 
-    if (m_videoStringSequence.IsPlaying())
+    if (g_videoStringSequence.IsPlaying())
     {
-        m_videoStringSequence.Update(deltaTime);
+        g_videoStringSequence.Update(deltaTime);
 
         *pScrollIndex = 0;
     }
 
-    if (!m_stringPoolSize)
+    if (!g_stringPoolSize)
         return;
 
-    auto scrollIndex = (*pScrollIndex + r30.u32) % m_stringPoolSize;
+    auto scrollIndex = (*pScrollIndex + r30.u32) % g_stringPoolSize;
 
-    pCSDText.u32 = *(be<uint32_t>*)g_memory.Translate((size_t)m_pStringPool + scrollIndex * 4);
+    pCSDText.u32 = *(be<uint32_t>*)g_memory.Translate((size_t)g_pStringPool + scrollIndex * 4);
 }

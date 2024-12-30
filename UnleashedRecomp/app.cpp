@@ -1,5 +1,6 @@
 #include "app.h"
 #include <api/SWA.h>
+#include <apu/embedded_player.h>
 #include <gpu/video.h>
 #include <install/installer.h>
 #include <kernel/function.h>
@@ -38,6 +39,7 @@ PPC_FUNC(sub_824EB490)
 
     SWA::SGlobals::Init();
     Registry::Save();
+    EmbeddedPlayer::Init();
 
     __imp__sub_824EB490(ctx, base);
 }

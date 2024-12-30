@@ -10,7 +10,6 @@
 #include <file.h>
 #include <xex.h>
 #include <apu/audio.h>
-#include <apu/driver/sdl_driver.h>
 #include <hid/hid.h>
 #include <user/config.h>
 #include <user/paths.h>
@@ -105,7 +104,6 @@ void KiSystemStartup()
         }
     }
 
-    SDL_Init_Driver();
     XAudioInitializeSystem();
 }
 

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "SWA.inl"
+#include <SWA.inl>
 
 inline void* __HH_ALLOC(const uint32_t in_Size)
 {
@@ -8,6 +8,11 @@ inline void* __HH_ALLOC(const uint32_t in_Size)
 }
 
 inline void __HH_FREE(const void* in_pData)
+{
+    GuestToHostFunction<void>(sub_822C0270, in_pData);
+}
+
+inline void __HH_FREE(const uint32_t in_pData)
 {
     GuestToHostFunction<void>(sub_822C0270, in_pData);
 }

@@ -99,6 +99,7 @@
 #include "SWA/Sequence/Unit/SequenceUnitPlayMovie.h"
 #include "SWA/Sequence/Utility/SequencePlayMovieWrapper.h"
 #include "SWA/Sound/Sound.h"
+#include "SWA/Sound/SoundBGMActEvil.h"
 #include "SWA/Sound/SoundBGMActSonic.h"
 #include "SWA/Sound/SoundBGMBase.h"
 #include "SWA/System/Application.h"

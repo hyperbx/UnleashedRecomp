@@ -1,23 +1,10 @@
 #pragma once
 
-#include <apu/driver/sdl_driver.h>
+#include <apu/embedded_player.h>
+#include <res/melpontro/frames/BadApple/vector.h>
+#include <user/config.h>
 
-#define BAD_APPLE true
-
-#if BAD_APPLE
-#include "res/frames/frmBadApple/vector.h"
-#endif
-
-#include "res/sound/sndIncludes.h"
-
-uint32_t m_pStringPool;
-uint32_t m_stringPoolSize;
-
-Sound m_sndAmongUs{ g_sndAmongUs, g_sndAmongUs_size };
-Sound m_sndBadApple{ g_sndBadApple, g_sndBadApple_size };
-Sound m_sndSans{ g_sndSans, g_sndSans_size };
-Sound m_sndVineBoom{ g_sndVineBoom, g_sndVineBoom_size };
-Sound m_sndXboxNotify{ g_sndXboxNotify, g_sndXboxNotify_size };
+static float g_origMasterVolume = 1.0f;
 
 size_t GetTotalStrlen(const std::vector<const char*> strs);
 void CreateStringPool(const std::vector<const char*> strs);
@@ -36,21 +23,25 @@ public:
 class VideoStringSequence
 {
 protected:
-    bool m_isStarted;
-    bool m_isPlaying;
+    bool m_isStarted{};
+    bool m_isPlaying{};
 
-    size_t m_currentFrame;
-    float m_frameTimer;
+    size_t m_currentFrame{};
+    float m_frameTimer{};
 
 public:
-    std::vector<std::vector<const char*>> Frames;
-    std::function<void()> PlayCallback;
-    std::function<void()> StopCallback;
-    float UpdateRate;
-    bool IsFinished;
+    std::vector<std::vector<const char*>> Frames{};
+    std::function<void()> PlayCallback{ nullptr };
+    std::function<void()> StopCallback{ nullptr };
+    float UpdateRate{};
+    bool IsFinished{};
 
     void Play()
     {
+        g_origMasterVolume = Config::MasterVolume;
+
+        Config::MasterVolume = 0.0f;
+
         m_isPlaying = true;
     }
 
@@ -69,6 +60,10 @@ public:
 
         if (StopCallback)
             StopCallback();
+
+        Config::MasterVolume = g_origMasterVolume;
+
+        EmbeddedPlayer::Shutdown();
     }
 
     void Update(float deltaTime)
@@ -96,11 +91,14 @@ public:
             if (m_currentFrame >= Frames.size())
             {
                 Stop();
+
                 IsFinished = true;
             }
+            else
+            {
+                CreateStringPool(Frames[m_currentFrame]);
+            }
         }
-
-        CreateStringPool(Frames[m_currentFrame]);
     }
 
     bool IsPlaying()
@@ -109,7 +107,6 @@ public:
     }
 };
 
-#if BAD_APPLE
 class BadAppleSequence : public VideoStringSequence
 {
 public:
@@ -119,20 +116,14 @@ public:
 
         PlayCallback = []()
         {
-            m_sndBadApple.Play();
-        };
-
-        StopCallback = []()
-        {
-            m_sndBadApple.Pause();
+            EmbeddedPlayer::Play("BadApple");
         };
 
         UpdateRate = 0.62f;
     }
 };
-#endif
 
-std::vector<const char*> m_singleStringSequences =
+std::vector<const char*> g_singleStringSequences =
 {
     "10 YEARS IN THE JOINT MADE YOU A FUCKING PUSSY",
     "SONIC UNLEASHED SUCKS",
@@ -162,11 +153,11 @@ std::vector<const char*> m_singleStringSequences =
     "imgui sega balls!"
 };
 
-std::vector<MultiStringSequence> m_multiStringSequences =
+std::vector<MultiStringSequence> g_multiStringSequences =
 {
     { { "nullptr" } },
     { { "Graphics device lost (probably due to an internal error)" } },
-    { { "Fatal Crash Intercepted!" }, []() { m_sndXboxNotify.Play(); } },
+    { { "Fatal Crash Intercepted!" }, []() { EmbeddedPlayer::Play("XboxNotify"); }},
     {
         {
             " ",
@@ -235,7 +226,7 @@ std::vector<MultiStringSequence> m_multiStringSequences =
             "                        **          ****      ****          **                             ",
             "                          **********              **********                               "
         },
-        []() { m_sndSans.Play(); }
+        []() { EmbeddedPlayer::Play("Sans"); }
     },
     {
         {
@@ -285,7 +276,7 @@ std::vector<MultiStringSequence> m_multiStringSequences =
             "                               ############                                                ",
             "                                   #####                                                   ",
         },
-        []() { m_sndAmongUs.Play(); }
+        []() { EmbeddedPlayer::Play("AmongUs"); }
     },
     {
         {
@@ -348,6 +339,6 @@ std::vector<MultiStringSequence> m_multiStringSequences =
             " ",
             " "
         },
-        []() { m_sndVineBoom.Play(); }
+        []() { EmbeddedPlayer::Play("VineBoom"); }
     }
 };
