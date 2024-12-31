@@ -295,19 +295,24 @@ void ButtonGuide::Draw()
     }
 }
 
-void ButtonGuide::Open(Button button)
+void ButtonGuide::Open(Button button, bool useDefaultSideMargins)
 {
     s_isVisible = true;
-    g_sideMargins = DEFAULT_SIDE_MARGINS;
+
+    if (useDefaultSideMargins)
+        g_sideMargins = DEFAULT_SIDE_MARGINS;
 
     g_buttons = {};
     g_buttons.push_back(button);
 }
 
-void ButtonGuide::Open(const std::span<Button> buttons)
+void ButtonGuide::Open(const std::span<Button> buttons, bool useDefaultSideMargins)
 {
     s_isVisible = true;
-    g_sideMargins = DEFAULT_SIDE_MARGINS;
+
+    if (useDefaultSideMargins)
+        g_sideMargins = DEFAULT_SIDE_MARGINS;
+
     g_buttons = std::vector(buttons.begin(), buttons.end());
 }
 

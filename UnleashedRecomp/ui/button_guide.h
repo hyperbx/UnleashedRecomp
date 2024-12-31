@@ -66,8 +66,8 @@ public:
 
     static void Init();
     static void Draw();
-    static void Open(Button button);
-    static void Open(const std::span<Button> buttons);
+    static void Open(Button button, bool useDefaultSideMargins = true);
+    static void Open(const std::span<Button> buttons, bool useDefaultSideMargins = true);
     static void SetSideMargins(float width);
     static void Close();
 };

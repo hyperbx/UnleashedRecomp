@@ -160,6 +160,7 @@ set(UNLEASHED_RECOMP_UI_CXX_SOURCES
     "ui/message_window.cpp"
     "ui/options_menu.cpp"
     "ui/options_menu_thumbnails.cpp"
+    "ui/sprite.cpp"
     "ui/tv_static.cpp"
 )
 
@@ -564,8 +565,12 @@ BIN2C(TARGET_OBJ UnleashedRecomp SOURCE_FILE "${RESOURCES_SOURCE_PATH}/sounds/sy
 BIN2C(TARGET_OBJ UnleashedRecomp SOURCE_FILE "${RESOURCES_SOURCE_PATH}/sounds/sys_actstg_pausewinopen.ogg" DEST_FILE "${RESOURCES_OUTPUT_PATH}/sounds/sys_actstg_pausewinopen.ogg" ARRAY_NAME "g_sys_actstg_pausewinopen")
 
 ## Melpontro ##
+BIN2C(TARGET_OBJ UnleashedRecomp SOURCE_FILE "${RESOURCES_OUTPUT_PATH}/melpontro/images/sprSonicDash.dds" DEST_FILE "${RESOURCES_OUTPUT_PATH}/melpontro/images/sprSonicDash.dds" ARRAY_NAME "g_sprSonicDash" COMPRESSION_TYPE "zstd")
+BIN2C(TARGET_OBJ UnleashedRecomp SOURCE_FILE "${RESOURCES_OUTPUT_PATH}/melpontro/images/sprSonicPush.dds" DEST_FILE "${RESOURCES_OUTPUT_PATH}/melpontro/images/sprSonicPush.dds" ARRAY_NAME "g_sprSonicPush" COMPRESSION_TYPE "zstd")
 BIN2C(TARGET_OBJ UnleashedRecomp SOURCE_FILE "${RESOURCES_OUTPUT_PATH}/melpontro/sounds/sndAmongUs.ogg" DEST_FILE "${RESOURCES_OUTPUT_PATH}/melpontro/sounds/sndAmongUs.ogg" ARRAY_NAME "g_sndAmongUs")
 BIN2C(TARGET_OBJ UnleashedRecomp SOURCE_FILE "${RESOURCES_OUTPUT_PATH}/melpontro/sounds/sndBadApple.ogg" DEST_FILE "${RESOURCES_OUTPUT_PATH}/melpontro/sounds/sndBadApple.ogg" ARRAY_NAME "g_sndBadApple")
+BIN2C(TARGET_OBJ UnleashedRecomp SOURCE_FILE "${RESOURCES_OUTPUT_PATH}/melpontro/sounds/sndMystery.ogg" DEST_FILE "${RESOURCES_OUTPUT_PATH}/melpontro/sounds/sndMystery.ogg" ARRAY_NAME "g_sndMystery")
+BIN2C(TARGET_OBJ UnleashedRecomp SOURCE_FILE "${RESOURCES_OUTPUT_PATH}/melpontro/sounds/sndPush.ogg" DEST_FILE "${RESOURCES_OUTPUT_PATH}/melpontro/sounds/sndPush.ogg" ARRAY_NAME "g_sndPush")
 BIN2C(TARGET_OBJ UnleashedRecomp SOURCE_FILE "${RESOURCES_OUTPUT_PATH}/melpontro/sounds/sndSans.ogg" DEST_FILE "${RESOURCES_OUTPUT_PATH}/melpontro/sounds/sndSans.ogg" ARRAY_NAME "g_sndSans")
 BIN2C(TARGET_OBJ UnleashedRecomp SOURCE_FILE "${RESOURCES_OUTPUT_PATH}/melpontro/sounds/sndVineBoom.ogg" DEST_FILE "${RESOURCES_OUTPUT_PATH}/melpontro/sounds/sndVineBoom.ogg" ARRAY_NAME "g_sndVineBoom")
 BIN2C(TARGET_OBJ UnleashedRecomp SOURCE_FILE "${RESOURCES_OUTPUT_PATH}/melpontro/sounds/sndXboxNotify.ogg" DEST_FILE "${RESOURCES_OUTPUT_PATH}/melpontro/sounds/sndXboxNotify.ogg" ARRAY_NAME "g_sndXboxNotify")

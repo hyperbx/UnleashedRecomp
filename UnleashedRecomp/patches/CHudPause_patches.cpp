@@ -1,12 +1,27 @@
 #include <kernel/function.h>
 #include <api/SWA.h>
+#include <apu/embedded_player.h>
+#include <gpu/video.h>
 #include <ui/achievement_menu.h>
 #include <ui/button_guide.h>
+#include <ui/game_window.h>
+#include <ui/imgui_utils.h>
 #include <ui/options_menu.h>
+#include <ui/sprite.h>
 #include <locale/locale.h>
 #include <app.h>
 
+#define PULSE_TIMER_THRESHOLD 0.6f
+
 bool g_isClosed;
+bool g_isAchievementsAccessed = false;
+bool g_isAchievementsExitFinished = false;
+bool g_isOptionsAccessed = false;
+
+ESpriteType g_spriteType = ESpriteType::SonicDash;
+float g_spriteX = 0.0f;
+float g_buttonGuideSideMargin = 379.0f;
+float g_pulseTimer = PULSE_TIMER_THRESHOLD;
 
 float g_achievementMenuIntroTime = 0.0f;
 constexpr float g_achievementMenuIntroThreshold = 3.0f;
@@ -16,6 +31,9 @@ bool g_isAchievementMenuOutro = false;
 
 void CHudPauseAddOptionsItemMidAsmHook(PPCRegister& pThis)
 {
+    if (g_isOptionsAccessed)
+        return;
+
     guest_stack_var<Hedgehog::Base::CSharedString> menu("TopMenu");
     guest_stack_var<Hedgehog::Base::CSharedString> name("option");
 
@@ -51,14 +69,10 @@ bool InjectMenuBehaviour(uint32_t pThis, uint32_t count)
 
     if (auto pInputState = SWA::CInputState::GetInstance())
     {
-        if (pInputState->GetPadState().IsTapped(SWA::eKeyState_Select))
+        if (pInputState->GetPadState().IsTapped(SWA::eKeyState_Select) && !g_isAchievementsAccessed)
         {
-            AchievementMenu::Open();
-    
-            pHudPause->m_Action = SWA::eActionType_Undefined;
-            pHudPause->m_Transition = SWA::eTransitionType_SubMenu;
-    
-            return false;
+            g_spriteX = GameWindow::s_width;
+            g_isAchievementsAccessed = true;
         }
     }
 
@@ -66,10 +80,11 @@ bool InjectMenuBehaviour(uint32_t pThis, uint32_t count)
     {
         if (cursorIndex == count - 2)
         {
-            OptionsMenu::Open(true, pHudPause->m_Menu);
+            EmbeddedPlayer::Play("Mystery");
 
-            pHudPause->m_Action = SWA::eActionType_Undefined;
-            pHudPause->m_Transition = SWA::eTransitionType_Hide;
+            g_isOptionsAccessed = true;
+
+            GuestToHostFunction<int>(0x824AFD28, pHudPause, 0, 0, 0, 1);
 
             if (pHudPause->m_rcBg1Select)
                 pHudPause->m_rcBg1Select->SetHideFlag(true);
@@ -90,21 +105,23 @@ bool InjectMenuBehaviour(uint32_t pThis, uint32_t count)
 
 bool CHudPauseItemCountMidAsmHook(PPCRegister& pThis, PPCRegister& count)
 {
-    count.u32 += 1;
+    if (!g_isOptionsAccessed)
+        count.u32 += 1;
 
     return InjectMenuBehaviour(pThis.u32, count.u32);
 }
 
 void CHudPauseVillageItemCountMidAsmHook(PPCRegister& pThis, PPCRegister& count)
 {
-    count.u32 += 1;
+    if (!g_isOptionsAccessed)
+        count.u32 += 1;
 
     InjectMenuBehaviour(pThis.u32, count.u32);
 }
 
 bool CHudPauseMiscItemCountMidAsmHook(PPCRegister& count)
 {
-    if (count.u32 < 3)
+    if (!g_isOptionsAccessed && count.u32 < 3)
         return true;
 
     return false;
@@ -112,7 +129,7 @@ bool CHudPauseMiscItemCountMidAsmHook(PPCRegister& count)
 
 bool CHudPauseMiscInjectOptionsMidAsmHook(PPCRegister& pThis)
 {
-    return InjectMenuBehaviour(pThis.u32, 3);
+    return InjectMenuBehaviour(pThis.u32, g_isOptionsAccessed ? 2 : 3);
 }
 
 // SWA::CHudPause::Update
@@ -172,7 +189,45 @@ PPC_FUNC(sub_824B0930)
 
         if (*SWA::SGlobals::ms_IsRenderHud && pHudPause->m_IsShown && !pHudPause->m_Submenu && pHudPause->m_Transition == SWA::eTransitionType_Undefined)
         {
-            ButtonGuide::Open(Button("Achievements_Name", FLT_MAX, EButtonIcon::Back, EButtonAlignment::Left, EFontQuality::Low));
+            if (g_isAchievementsAccessed && !g_isAchievementsExitFinished)
+            {
+                auto drawList = ImGui::GetForegroundDrawList();
+                auto& res = ImGui::GetIO().DisplaySize;
+
+                auto y = res.y - Scale(105);
+                auto scale = Scale(40);
+
+                if (g_spriteType == ESpriteType::SonicDash)
+                {
+                    g_spriteX = Lerp(g_spriteX, 0.0f, App::s_deltaTime / 2);
+
+                    if (g_spriteX <= g_buttonGuideSideMargin + Scale(310))
+                        g_spriteType = ESpriteType::SonicPush;
+                }
+                else if (g_spriteType == ESpriteType::SonicPush)
+                {
+                    g_spriteX = Lerp(g_spriteX, Scale(-350), App::s_deltaTime / 4);
+                    g_buttonGuideSideMargin = Lerp(g_buttonGuideSideMargin, Scale(-350), App::s_deltaTime / 4);
+                    g_pulseTimer += App::s_deltaTime;
+
+                    if (g_pulseTimer >= PULSE_TIMER_THRESHOLD)
+                    {
+                        EmbeddedPlayer::Play("Push");
+                        g_pulseTimer = 0.0f;
+                    }
+
+                    ButtonGuide::SetSideMargins(g_buttonGuideSideMargin);
+
+                    if (g_spriteX + scale <= 0)
+                        g_isAchievementsExitFinished = true;
+                }
+
+                Sprite::Show(g_spriteX, y, scale, g_spriteType);
+            }
+
+            if (!g_isAchievementsExitFinished)
+                ButtonGuide::Open(Button("Achievements_Name", FLT_MAX, EButtonIcon::Back, EButtonAlignment::Left, EFontQuality::Low), !g_isAchievementsAccessed);
+
             g_isClosed = false;
         }
         else if (!g_isClosed)

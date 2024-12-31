@@ -62,8 +62,6 @@ public:
             StopCallback();
 
         Config::MasterVolume = g_origMasterVolume;
-
-        EmbeddedPlayer::Shutdown();
     }
 
     void Update(float deltaTime)

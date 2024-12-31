@@ -25,6 +25,7 @@
 #include <ui/installer_wizard.h>
 #include <ui/message_window.h>
 #include <ui/options_menu.h>
+#include <ui/sprite.h>
 #include <ui/game_window.h>
 #include <ui/black_bar.h>
 #include <patches/aspect_ratio_patches.h>
@@ -1371,6 +1372,7 @@ static void CreateImGuiBackend()
     ButtonGuide::Init();
     MessageWindow::Init();
     OptionsMenu::Init();
+    Sprite::Init();
     InstallerWizard::Init();
 
     ImGui_ImplSDL2_InitForOther(GameWindow::s_pWindow);
@@ -2468,6 +2470,7 @@ static void DrawImGui()
     ButtonGuide::Draw();
     Fader::Draw();
     BlackBar::Draw();
+    Sprite::Draw();
 
     assert(ImGui::GetBackgroundDrawList()->_ClipRectStack.Size == 1 && "Some clip rects were not removed from the stack!");
 
