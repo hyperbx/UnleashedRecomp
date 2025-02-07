@@ -4,8 +4,9 @@
 #include <kernel/function.h>
 #include <kernel/heap.h>
 #include <kernel/memory.h>
-#include <ui/game_window.h>
 #include <patches/inspire_patches.h>
+#include <ui/game_window.h>
+#include <app.h>
 
 void Game_PlaySound(const char* pName)
 {

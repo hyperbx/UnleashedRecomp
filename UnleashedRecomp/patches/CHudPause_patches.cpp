@@ -78,7 +78,7 @@ bool InjectMenuBehaviour(uint32_t pThis, uint32_t count)
 
     if (pHudPause->m_Status == SWA::eStatusType_Accept)
     {
-        if (cursorIndex == count - 2)
+        if (cursorIndex == count - 2 && !g_isOptionsAccessed)
         {
             EmbeddedPlayer::Play("Mystery");
 
@@ -232,6 +232,7 @@ PPC_FUNC(sub_824B0930)
         }
         else if (!g_isClosed)
         {
+            Sprite::Hide();
             ButtonGuide::Close();
             g_isClosed = true;
         }

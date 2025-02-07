@@ -21,6 +21,9 @@ void Sprite::Init()
 
 void Sprite::Draw()
 {
+    if (!s_isVisible)
+        return;
+
     auto drawList = ImGui::GetForegroundDrawList();
 
     GuestTexture* texture = nullptr;
@@ -69,8 +72,14 @@ void Sprite::Draw()
 
 void Sprite::Show(float x, float y, float scale, ESpriteType type)
 {
+    s_isVisible = true;
     g_x = x;
     g_y = y;
     g_scale = scale;
     g_type = type;
+}
+
+void Sprite::Hide()
+{
+    s_isVisible = false;
 }

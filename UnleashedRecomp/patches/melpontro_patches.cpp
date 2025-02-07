@@ -1,6 +1,5 @@
 #include "melpontro_patches.h"
 #include <api/SWA.h>
-#include <cpu/guest_code.h>
 #include <os/logger.h>
 #include <app.h>
 
