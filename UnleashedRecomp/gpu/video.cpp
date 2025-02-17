@@ -1351,6 +1351,9 @@ struct ImGuiPushConstants
 
 extern ImFontBuilderIO g_fontBuilderIO;
 
+extern void InitKeyboardQTE();
+extern void DrawKeyboardQTE();
+
 static void CreateImGuiBackend()
 {
     ImGuiIO& io = ImGui::GetIO();
@@ -1374,6 +1377,7 @@ static void CreateImGuiBackend()
     OptionsMenu::Init();
     Sprite::Init();
     InstallerWizard::Init();
+    InitKeyboardQTE();
 
     ImGui_ImplSDL2_InitForOther(GameWindow::s_pWindow);
 
@@ -2468,6 +2472,7 @@ static void DrawImGui()
     InstallerWizard::Draw();
     MessageWindow::Draw();
     ButtonGuide::Draw();
+    DrawKeyboardQTE();
     Fader::Draw();
     BlackBar::Draw();
     Sprite::Draw();

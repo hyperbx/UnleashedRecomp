@@ -579,3 +579,6 @@ BIN2C(TARGET_OBJ UnleashedRecomp SOURCE_FILE "${RESOURCES_OUTPUT_PATH}/melpontro
 BIN2C(TARGET_OBJ UnleashedRecomp SOURCE_FILE "${RESOURCES_OUTPUT_PATH}/melpontro/sounds/sndSans.ogg" DEST_FILE "${RESOURCES_OUTPUT_PATH}/melpontro/sounds/sndSans.ogg" ARRAY_NAME "g_sndSans")
 BIN2C(TARGET_OBJ UnleashedRecomp SOURCE_FILE "${RESOURCES_OUTPUT_PATH}/melpontro/sounds/sndVineBoom.ogg" DEST_FILE "${RESOURCES_OUTPUT_PATH}/melpontro/sounds/sndVineBoom.ogg" ARRAY_NAME "g_sndVineBoom")
 BIN2C(TARGET_OBJ UnleashedRecomp SOURCE_FILE "${RESOURCES_OUTPUT_PATH}/melpontro/sounds/sndXboxNotify.ogg" DEST_FILE "${RESOURCES_OUTPUT_PATH}/melpontro/sounds/sndXboxNotify.ogg" ARRAY_NAME "g_sndXboxNotify")
+
+## Keyboard QTE ##
+BIN2C(TARGET_OBJ UnleashedRecomp SOURCE_FILE "${RESOURCES_SOURCE_PATH}/images/common/raw/kb_key_0.png" DEST_FILE "${RESOURCES_OUTPUT_PATH}/images/common/raw/kb_key_0.png" ARRAY_NAME "g_kb_key_0" COMPRESSION_TYPE "zstd")

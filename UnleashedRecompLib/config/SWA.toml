@@ -1121,3 +1121,18 @@ jump_address_on_true = 0x824DB098
 name = "Mel_SetLoadingStringsMidAsmHook"
 address = 0x824DB1CC
 registers = ["r31", "r4", "r25", "r30"]
+
+[[midasm_hook]]
+name = "QteButtonPromptInitMidAsmHook"
+address = 0x823339D8
+jump_address = 0x82333D14
+
+[[midasm_hook]]
+name = "QteButtonPromptUpdateMidAsmHook"
+address = 0x82332A90
+jump_address = 0x82332BC4
+
+[[midasm_hook]]
+name = "TrickJumperCompareMidAsmHook"
+address = 0x82611910
+registers = ["r28"]
