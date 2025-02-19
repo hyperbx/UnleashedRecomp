@@ -4,11 +4,19 @@
 #include <res/melpontro/frames/BadApple/vector.h>
 #include <user/config.h>
 
+extern bool g_isBadAppleQueued;
+
 static float g_origMasterVolume = 1.0f;
 
 size_t GetTotalStrlen(const std::vector<const char*> strs);
 void CreateStringPool(const std::vector<const char*> strs);
 void FreeStringPool();
+
+class MelpontroPatches
+{
+public:
+    static void Update();
+};
 
 class MultiStringSequence
 {
@@ -117,11 +125,16 @@ public:
             EmbeddedPlayer::Play("BadApple");
         };
 
+        StopCallback = []()
+        {
+            g_isBadAppleQueued = false;
+        };
+
         UpdateRate = 0.62f;
     }
 };
 
-std::vector<const char*> g_singleStringSequences =
+inline std::vector<const char*> g_singleStringSequences =
 {
     "10 YEARS IN THE JOINT MADE YOU A FUCKING PUSSY",
     "SONIC UNLEASHED SUCKS",
@@ -151,7 +164,7 @@ std::vector<const char*> g_singleStringSequences =
     "imgui sega balls!"
 };
 
-std::vector<MultiStringSequence> g_multiStringSequences =
+inline std::vector<MultiStringSequence> g_multiStringSequences =
 {
     { { "nullptr" } },
     { { "Graphics device lost (probably due to an internal error)" } },

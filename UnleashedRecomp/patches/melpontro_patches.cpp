@@ -3,6 +3,8 @@
 #include <os/logger.h>
 #include <app.h>
 
+bool g_isBadAppleQueued;
+
 uint32_t g_pStringPool;
 uint32_t g_stringPoolSize;
 
@@ -80,8 +82,7 @@ void Mel_MsgRequestStartLoadingMidAsmHook(PPCRegister& pThis, PPCRegister& r4)
     std::bernoulli_distribution scrollingTextDist(0.5);
 
     // Randomly change loading screen to use scrolling text variant.
-    // TODO (Hyper): fix this being inconsistent.
-    if (scrollingTextDist(rng) && *pType == 3)
+    if (g_isBadAppleQueued || (scrollingTextDist(rng) && *pType == 3))
         *pType = 0;
 
     if (*pType == 0)
@@ -99,10 +100,7 @@ void Mel_MsgRequestStartLoadingMidAsmHook(PPCRegister& pThis, PPCRegister& r4)
 
     FreeStringPool();
 
-    // TODO (Hyper): nullify chances of this occurring until after a specific stage?
-    std::bernoulli_distribution badAppleDist(g_videoStringSequence.IsFinished ? 0 : 0.25);
-
-    if (badAppleDist(rng))
+    if (g_isBadAppleQueued)
     {
         g_videoStringSequence = BadAppleSequence();
         g_videoStringSequence.Play();
@@ -168,4 +166,12 @@ void Mel_SetLoadingStringsMidAsmHook(PPCRegister& pThis, PPCRegister& pCSDText, 
     auto scrollIndex = (*pScrollIndex + r30.u32) % g_stringPoolSize;
 
     pCSDText.u32 = *(be<uint32_t>*)g_memory.Translate((size_t)g_pStringPool + scrollIndex * 4);
+}
+
+void MelpontroPatches::Update()
+{
+    auto keyboardState = SDL_GetKeyboardState(NULL);
+
+    if (keyboardState[SDL_SCANCODE_F5])
+        g_isBadAppleQueued = true;
 }

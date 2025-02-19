@@ -7,6 +7,7 @@
 #include <os/process.h>
 #include <patches/audio_patches.h>
 #include <patches/inspire_patches.h>
+#include <patches/melpontro_patches.h>
 #include <ui/game_window.h>
 #include <user/config.h>
 #include <user/paths.h>
@@ -77,6 +78,7 @@ PPC_FUNC(sub_822C1130)
 
     AudioPatches::Update(App::s_deltaTime);
     InspirePatches::Update();
+    MelpontroPatches::Update();
 
     // Apply subtitles option.
     if (auto pApplicationDocument = SWA::CApplicationDocument::GetInstance())
