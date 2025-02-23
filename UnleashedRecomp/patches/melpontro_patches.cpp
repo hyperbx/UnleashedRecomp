@@ -1,7 +1,17 @@
 #include "melpontro_patches.h"
 #include <api/SWA.h>
+#include <hid/hid.h>
 #include <os/logger.h>
+#include <ui/message_window.h>
 #include <app.h>
+
+SWA::CGameModeStage* g_pGameModeStage;
+
+bool g_showMessage;
+bool g_showAdabatMessage;
+size_t g_messageIndex;
+float g_timeSinceMessageShown;
+std::string g_lastMessageStage;
 
 bool g_isBadAppleQueued;
 
@@ -168,10 +178,88 @@ void Mel_SetLoadingStringsMidAsmHook(PPCRegister& pThis, PPCRegister& pCSDText, 
     pCSDText.u32 = *(be<uint32_t>*)g_memory.Translate((size_t)g_pStringPool + scrollIndex * 4);
 }
 
+// SWA::CGameModeStage::CGameModeStage
+PPC_FUNC_IMPL(__imp__sub_82541138);
+PPC_FUNC(sub_82541138)
+{
+    g_pGameModeStage = (SWA::CGameModeStage*)g_memory.Translate(ctx.r3.u32);
+
+    __imp__sub_82541138(ctx, base);
+}
+
+// SWA::CObjEntranceDoor::MsgHitEventCollision::Impl
+PPC_FUNC_IMPL(__imp__sub_8273EAE8);
+PPC_FUNC(sub_8273EAE8)
+{
+    if (auto pGameDocument = SWA::CGameDocument::GetInstance())
+    {
+        auto& rStageName = pGameDocument->m_pMember->m_StageName;
+
+        // Only display this message once per entrance stage.
+        if (strcmp(g_lastMessageStage.c_str(), rStageName.c_str()) != 0)
+        {
+            static bool shownAdabatMessage;
+
+            if (!shownAdabatMessage && std::strstr(rStageName.c_str(), "SouthEastAsia"))
+            {
+                g_showAdabatMessage = true;
+                shownAdabatMessage = true;
+            }
+
+            g_showMessage = true;
+            g_timeSinceMessageShown = App::s_time;
+        }
+
+        g_lastMessageStage = rStageName.c_str();
+    }
+
+    __imp__sub_8273EAE8(ctx, base);
+}
+
 void MelpontroPatches::Update()
 {
     auto keyboardState = SDL_GetKeyboardState(NULL);
 
     if (keyboardState[SDL_SCANCODE_F5])
         g_isBadAppleQueued = true;
+
+    if (g_showMessage)
+    {
+        static int result = -1;
+
+        g_pGameModeStage->m_GameSpeed = 0.001f;
+
+        auto msg = g_gateMessages[g_messageIndex];
+        auto msgText = std::get<0>(msg);
+        auto msgButtons = std::get<1>(msg);
+
+        if (g_showAdabatMessage)
+        {
+            msgText = "amazing looking water in this game";
+            msgButtons = { "Yeah!" };
+        }
+
+        if (msgButtons.empty())
+            hid::SetProhibitedInputs(App::s_time - g_timeSinceMessageShown > 1.5f ? 0 : 0xFFFF);
+
+        if (MessageWindow::Open(msgText, &result, msgButtons) == MSG_CLOSED)
+        {
+            result = -1;
+
+            g_pGameModeStage->m_GameSpeed = 1.0f;
+
+            g_showMessage = false;
+
+            if (!g_showAdabatMessage)
+                g_messageIndex = (g_messageIndex + 1) % g_gateMessages.size();
+
+            g_showAdabatMessage = false;
+        }
+    }
+
+    if (auto pGameDocument = SWA::CGameDocument::GetInstance())
+    {
+        if (pGameDocument->m_pMember->m_StageName.empty())
+            g_lastMessageStage = "";
+    }
 }

@@ -134,6 +134,24 @@ public:
     }
 };
 
+inline std::vector<std::tuple<std::string, std::vector<std::string>>> g_gateMessages =
+{
+    { "An internet connection is required.", {} },
+    { "The detected configuration does\nnot match your current hardware.\n\nPlease re-run the configuration tool.", { "OK" } },
+    { "Game files either missing or corrupt please reinstall", {} },
+    { "Sonic is hacking your computer", { "WTF" } },
+    { "Task failed successfully.", {} },
+    { "LIGHTING NEEDS TO BE REBUILT\n(7 unbuilt objects)\n\nRun console command\n'DumpUnbuiltLightInteractions'\nto see what is unbuilt.", { "DumpUnbuiltLightInteractions", "No, I don't think I will" } },
+    { "Reticulating splines", {} },
+    { "An error has occurred and the\napplication will now close.\n\nDo you want to attempt to save\na copy of the current scene?", { "Yes", "No" } },
+    { "Memory access violation", {} },
+    { "Sonic Unleashed has encountered a problem and needs to close. We are sorry for the inconvenience.\n\nWe have created an error report that you can send to help us improve Sonic Unleashed. We will treat this report as confidential and anonymous.", { "Send Error Report", "Don't Send" } },
+    { "Xbox 360 Expansion Pak detected.\nHigh resolution GI enabled.", {} },
+    { "ERROR NAVITATION MESH 01\nPlease check Stage.stg.xml", {} },
+    { "Node Graph out of Date. Rebuilding...", {} },
+    { "Hello, World!", {} },
+};
+
 inline std::vector<const char*> g_singleStringSequences =
 {
     "10 YEARS IN THE JOINT MADE YOU A FUCKING PUSSY",
@@ -313,16 +331,6 @@ inline std::vector<MultiStringSequence> g_multiStringSequences =
             "it was removed from the menu in 1985. Since then, it appears annually or at various times,",
             "though Germany and Luxemburg have them as permanent menu items.",
             " "
-        }
-    },
-    {
-        {
-            " ",
-            "Critical Error!",
-            " ",
-            "The detected configuration does not match your current hardware.",
-            "Please re-run the configuration tool.",
-            " ",
         }
     },
     {
