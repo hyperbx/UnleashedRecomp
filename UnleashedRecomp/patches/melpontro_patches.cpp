@@ -216,6 +216,14 @@ PPC_FUNC(sub_8273EAE8)
     __imp__sub_8273EAE8(ctx, base);
 }
 
+PPC_FUNC_IMPL(__imp__sub_8250F2B8);
+PPC_FUNC(sub_8250F2B8)
+{
+    PPC_STORE_U8(0x82032835, (strcmp(reinterpret_cast<char*>(base + PPC_LOAD_U32(ctx.r4.u32)), "bgm_ClockTown") == 0) ? '2' : '\0');
+
+    __imp__sub_8250F2B8(ctx, base);
+}
+
 void MelpontroPatches::Update()
 {
     auto keyboardState = SDL_GetKeyboardState(NULL);
