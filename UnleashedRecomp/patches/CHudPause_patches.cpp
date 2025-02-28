@@ -189,6 +189,7 @@ PPC_FUNC(sub_824B0930)
 
         if (*SWA::SGlobals::ms_IsRenderHud && pHudPause->m_IsShown && !pHudPause->m_Submenu && pHudPause->m_Transition == SWA::eTransitionType_Undefined)
         {
+            // NOTE: this is hard-coded to only work at 16:9, sorry.
             if (g_isAchievementsAccessed && !g_isAchievementsExitFinished)
             {
                 auto drawList = ImGui::GetForegroundDrawList();
@@ -201,13 +202,13 @@ PPC_FUNC(sub_824B0930)
                 {
                     g_spriteX = Lerp(g_spriteX, 0.0f, App::s_deltaTime / 2);
 
-                    if (g_spriteX <= g_buttonGuideSideMargin + Scale(310))
+                    if (g_spriteX <= Scale(550))
                         g_spriteType = ESpriteType::SonicPush;
                 }
                 else if (g_spriteType == ESpriteType::SonicPush)
                 {
-                    g_spriteX = Lerp(g_spriteX, Scale(-350), App::s_deltaTime / 4);
-                    g_buttonGuideSideMargin = Lerp(g_buttonGuideSideMargin, Scale(-350), App::s_deltaTime / 4);
+                    g_spriteX = Lerp(g_spriteX, Scale(-355), App::s_deltaTime / 4);
+                    g_buttonGuideSideMargin = Lerp(g_buttonGuideSideMargin, -530.0f, App::s_deltaTime / 4);
                     g_pulseTimer += App::s_deltaTime;
 
                     if (g_pulseTimer >= PULSE_TIMER_THRESHOLD)
