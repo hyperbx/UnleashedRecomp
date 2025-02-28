@@ -16,6 +16,7 @@
 #include <res/melpontro/sounds/sndMystery.ogg.h>
 #include <res/melpontro/sounds/sndPush.ogg.h>
 #include <res/melpontro/sounds/sndSans.ogg.h>
+#include <res/melpontro/sounds/sndSplash.ogg.h>
 #include <res/melpontro/sounds/sndVineBoom.ogg.h>
 #include <res/melpontro/sounds/sndXboxNotify.ogg.h>
 
@@ -33,6 +34,7 @@ enum class EmbeddedSound
     Mystery,
     Push,
     Sans,
+    Splash,
     VineBoom,
     XboxNotify,
     Count
@@ -59,6 +61,7 @@ static const std::unordered_map<std::string_view, EmbeddedSound> g_embeddedSound
     { "Mystery", EmbeddedSound::Mystery },
     { "Push", EmbeddedSound::Push },
     { "Sans", EmbeddedSound::Sans },
+    { "Splash", EmbeddedSound::Splash },
     { "VineBoom", EmbeddedSound::VineBoom },
     { "XboxNotify", EmbeddedSound::XboxNotify }
 };
@@ -125,6 +128,10 @@ static void PlayEmbeddedSound(EmbeddedSound s)
                 soundData = g_sndSans;
                 soundDataSize = sizeof(g_sndSans);
                 break;
+            case EmbeddedSound::Splash:
+                soundData = g_sndSplash;
+                soundDataSize = sizeof(g_sndSplash);
+                break;
             case EmbeddedSound::VineBoom:
                 soundData = g_sndVineBoom;
                 soundDataSize = sizeof(g_sndVineBoom);
@@ -141,8 +148,17 @@ static void PlayEmbeddedSound(EmbeddedSound s)
         data.chunk = Mix_LoadWAV_RW(SDL_RWFromConstMem(soundData, soundDataSize), 1);
     }
     
-    Mix_VolumeChunk(data.chunk, Config::MasterVolume * Config::EffectsVolume * MIX_MAX_VOLUME);
+    if (s == EmbeddedSound::BadApple)
+    {
+        Mix_VolumeChunk(data.chunk, 0.75f * MIX_MAX_VOLUME);
+    }
+    else
+    {
+        Mix_VolumeChunk(data.chunk, Config::MasterVolume * Config::EffectsVolume * MIX_MAX_VOLUME);
+    }
+
     Mix_PlayChannel(g_channelIndex % MIX_CHANNELS, data.chunk, 0);
+
     ++g_channelIndex;
 }
 

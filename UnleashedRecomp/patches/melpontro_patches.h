@@ -127,6 +127,7 @@ public:
 
         StopCallback = []()
         {
+            Config::XboxColorCorrection = false;
             g_isBadAppleQueued = false;
         };
 

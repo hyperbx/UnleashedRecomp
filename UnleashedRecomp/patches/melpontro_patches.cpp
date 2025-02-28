@@ -228,8 +228,12 @@ void MelpontroPatches::Update()
 {
     auto keyboardState = SDL_GetKeyboardState(NULL);
 
-    if (keyboardState[SDL_SCANCODE_F5])
+    if (keyboardState[SDL_SCANCODE_F5] && !g_isBadAppleQueued)
+    {
+        EmbeddedPlayer::Play("Splash");
+        Config::XboxColorCorrection = true;
         g_isBadAppleQueued = true;
+    }
 
     if (g_showMessage)
     {
