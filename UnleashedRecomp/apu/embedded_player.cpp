@@ -16,6 +16,7 @@
 #include <res/melpontro/sounds/sndJarate.ogg.h>
 #include <res/melpontro/sounds/sndMystery.ogg.h>
 #include <res/melpontro/sounds/sndPush.ogg.h>
+#include <res/melpontro/sounds/sndReverseSplash.ogg.h>
 #include <res/melpontro/sounds/sndSans.ogg.h>
 #include <res/melpontro/sounds/sndVineBoom.ogg.h>
 #include <res/melpontro/sounds/sndXboxNotify.ogg.h>
@@ -34,6 +35,7 @@ enum class EmbeddedSound
     Jarate,
     Mystery,
     Push,
+    ReverseSplash,
     Sans,
     VineBoom,
     XboxNotify,
@@ -61,6 +63,7 @@ static const std::unordered_map<std::string_view, EmbeddedSound> g_embeddedSound
     { "Jarate", EmbeddedSound::Jarate },
     { "Mystery", EmbeddedSound::Mystery },
     { "Push", EmbeddedSound::Push },
+    { "ReverseSplash", EmbeddedSound::ReverseSplash },
     { "Sans", EmbeddedSound::Sans },
     { "VineBoom", EmbeddedSound::VineBoom },
     { "XboxNotify", EmbeddedSound::XboxNotify }
@@ -124,6 +127,10 @@ static void PlayEmbeddedSound(EmbeddedSound s)
                 soundData = g_sndPush;
                 soundDataSize = sizeof(g_sndPush);
                 break;
+            case EmbeddedSound::ReverseSplash:
+                soundData = g_sndReverseSplash;
+                soundDataSize = sizeof(g_sndReverseSplash);
+                break;
             case EmbeddedSound::Sans:
                 soundData = g_sndSans;
                 soundDataSize = sizeof(g_sndSans);
@@ -185,6 +192,11 @@ void EmbeddedPlayer::Play(const char* name)
         return;
 
     PlayEmbeddedSound(it->second);
+}
+
+void EmbeddedPlayer::Stop()
+{
+    Mix_HaltChannel(-1);
 }
 
 void EmbeddedPlayer::PlayMusic()

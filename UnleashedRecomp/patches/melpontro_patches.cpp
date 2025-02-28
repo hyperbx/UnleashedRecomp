@@ -3,7 +3,6 @@
 #include <hid/hid.h>
 #include <os/logger.h>
 #include <ui/message_window.h>
-#include <app.h>
 
 SWA::CGameModeStage* g_pGameModeStage;
 
@@ -13,8 +12,12 @@ size_t g_messageIndex;
 float g_timeSinceMessageShown;
 std::string g_lastMessageStage;
 
+float g_badAppleFinishTime;
 float g_badAppleQueueTime;
 bool g_isBadAppleQueued;
+bool g_isBadAppleFinished;
+bool g_isBadAppleExitSoundPlayed;
+bool g_isBadAppleColorCorrectionReset;
 
 uint32_t g_pStringPool;
 uint32_t g_stringPoolSize;
@@ -235,12 +238,30 @@ void MelpontroPatches::Update()
 
         g_badAppleQueueTime = App::s_time;
         g_isBadAppleQueued = true;
+        g_isBadAppleFinished = false;
+        g_isBadAppleExitSoundPlayed = false;
+        g_isBadAppleColorCorrectionReset = false;
     }
 
     if (g_isBadAppleQueued)
     {
         if (App::s_time - g_badAppleQueueTime > 1.1745f)
             Config::XboxColorCorrection = true;
+    }
+
+    if (g_isBadAppleFinished && !g_isBadAppleColorCorrectionReset)
+    {
+        if (!g_isBadAppleExitSoundPlayed)
+        {
+            EmbeddedPlayer::Play("ReverseSplash");
+            g_isBadAppleExitSoundPlayed = true;
+        }
+
+        if (App::s_time - g_badAppleFinishTime > 2.2f)
+        {
+            Config::XboxColorCorrection = false;
+            g_isBadAppleColorCorrectionReset = true;
+        }
     }
 
     if (g_showMessage)

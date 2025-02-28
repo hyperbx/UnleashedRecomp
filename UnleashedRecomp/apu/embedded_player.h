@@ -9,6 +9,7 @@ struct EmbeddedPlayer
 
     static void Init();
     static void Play(const char *name);
+    static void Stop();
     static void PlayMusic();
     static void FadeOutMusic();
     static void Shutdown();

@@ -3,8 +3,11 @@
 #include <apu/embedded_player.h>
 #include <res/melpontro/frames/BadApple/vector.h>
 #include <user/config.h>
+#include <app.h>
 
+extern float g_badAppleFinishTime;
 extern bool g_isBadAppleQueued;
+extern bool g_isBadAppleFinished;
 
 static float g_origMasterVolume = 1.0f;
 
@@ -94,6 +97,12 @@ public:
                 m_frameTimer = 0.0f;
             }
 
+            auto keyboardState = SDL_GetKeyboardState(NULL);
+
+            // Cancel playback on CTRL+C.
+            if (keyboardState[SDL_SCANCODE_LCTRL] && keyboardState[SDL_SCANCODE_C])
+                m_currentFrame = Frames.size();
+
             if (m_currentFrame >= Frames.size())
             {
                 Stop();
@@ -123,12 +132,15 @@ public:
         PlayCallback = []()
         {
             EmbeddedPlayer::Play("BadApple");
+            g_isBadAppleFinished = false;
         };
 
         StopCallback = []()
         {
-            Config::XboxColorCorrection = false;
+            EmbeddedPlayer::Stop();
+            g_badAppleFinishTime = App::s_time;
             g_isBadAppleQueued = false;
+            g_isBadAppleFinished = true;
         };
 
         UpdateRate = 0.62f;
