@@ -13,6 +13,7 @@ size_t g_messageIndex;
 float g_timeSinceMessageShown;
 std::string g_lastMessageStage;
 
+float g_badAppleQueueTime;
 bool g_isBadAppleQueued;
 
 uint32_t g_pStringPool;
@@ -230,9 +231,15 @@ void MelpontroPatches::Update()
 
     if (keyboardState[SDL_SCANCODE_F5] && !g_isBadAppleQueued)
     {
-        EmbeddedPlayer::Play("Splash");
-        Config::XboxColorCorrection = true;
+        EmbeddedPlayer::Play("Jarate");
+        g_badAppleQueueTime = App::s_time;
         g_isBadAppleQueued = true;
+    }
+
+    if (g_isBadAppleQueued)
+    {
+        if (App::s_time - g_badAppleQueueTime > 1.1745f)
+            Config::XboxColorCorrection = true;
     }
 
     if (g_showMessage)

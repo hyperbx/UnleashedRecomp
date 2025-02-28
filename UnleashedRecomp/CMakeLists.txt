@@ -574,10 +574,10 @@ BIN2C(TARGET_OBJ UnleashedRecomp SOURCE_FILE "${RESOURCES_OUTPUT_PATH}/melpontro
 BIN2C(TARGET_OBJ UnleashedRecomp SOURCE_FILE "${RESOURCES_OUTPUT_PATH}/melpontro/images/sprSonicPush.dds" DEST_FILE "${RESOURCES_OUTPUT_PATH}/melpontro/images/sprSonicPush.dds" ARRAY_NAME "g_sprSonicPush" COMPRESSION_TYPE "zstd")
 BIN2C(TARGET_OBJ UnleashedRecomp SOURCE_FILE "${RESOURCES_OUTPUT_PATH}/melpontro/sounds/sndAmongUs.ogg" DEST_FILE "${RESOURCES_OUTPUT_PATH}/melpontro/sounds/sndAmongUs.ogg" ARRAY_NAME "g_sndAmongUs")
 BIN2C(TARGET_OBJ UnleashedRecomp SOURCE_FILE "${RESOURCES_OUTPUT_PATH}/melpontro/sounds/sndBadApple.ogg" DEST_FILE "${RESOURCES_OUTPUT_PATH}/melpontro/sounds/sndBadApple.ogg" ARRAY_NAME "g_sndBadApple")
+BIN2C(TARGET_OBJ UnleashedRecomp SOURCE_FILE "${RESOURCES_OUTPUT_PATH}/melpontro/sounds/sndJarate.ogg" DEST_FILE "${RESOURCES_OUTPUT_PATH}/melpontro/sounds/sndJarate.ogg" ARRAY_NAME "g_sndJarate")
 BIN2C(TARGET_OBJ UnleashedRecomp SOURCE_FILE "${RESOURCES_OUTPUT_PATH}/melpontro/sounds/sndMystery.ogg" DEST_FILE "${RESOURCES_OUTPUT_PATH}/melpontro/sounds/sndMystery.ogg" ARRAY_NAME "g_sndMystery")
 BIN2C(TARGET_OBJ UnleashedRecomp SOURCE_FILE "${RESOURCES_OUTPUT_PATH}/melpontro/sounds/sndPush.ogg" DEST_FILE "${RESOURCES_OUTPUT_PATH}/melpontro/sounds/sndPush.ogg" ARRAY_NAME "g_sndPush")
 BIN2C(TARGET_OBJ UnleashedRecomp SOURCE_FILE "${RESOURCES_OUTPUT_PATH}/melpontro/sounds/sndSans.ogg" DEST_FILE "${RESOURCES_OUTPUT_PATH}/melpontro/sounds/sndSans.ogg" ARRAY_NAME "g_sndSans")
-BIN2C(TARGET_OBJ UnleashedRecomp SOURCE_FILE "${RESOURCES_OUTPUT_PATH}/melpontro/sounds/sndSplash.ogg" DEST_FILE "${RESOURCES_OUTPUT_PATH}/melpontro/sounds/sndSplash.ogg" ARRAY_NAME "g_sndSplash")
 BIN2C(TARGET_OBJ UnleashedRecomp SOURCE_FILE "${RESOURCES_OUTPUT_PATH}/melpontro/sounds/sndVineBoom.ogg" DEST_FILE "${RESOURCES_OUTPUT_PATH}/melpontro/sounds/sndVineBoom.ogg" ARRAY_NAME "g_sndVineBoom")
 BIN2C(TARGET_OBJ UnleashedRecomp SOURCE_FILE "${RESOURCES_OUTPUT_PATH}/melpontro/sounds/sndXboxNotify.ogg" DEST_FILE "${RESOURCES_OUTPUT_PATH}/melpontro/sounds/sndXboxNotify.ogg" ARRAY_NAME "g_sndXboxNotify")
 

@@ -13,10 +13,10 @@
 
 #include <res/melpontro/sounds/sndAmongUs.ogg.h>
 #include <res/melpontro/sounds/sndBadApple.ogg.h>
+#include <res/melpontro/sounds/sndJarate.ogg.h>
 #include <res/melpontro/sounds/sndMystery.ogg.h>
 #include <res/melpontro/sounds/sndPush.ogg.h>
 #include <res/melpontro/sounds/sndSans.ogg.h>
-#include <res/melpontro/sounds/sndSplash.ogg.h>
 #include <res/melpontro/sounds/sndVineBoom.ogg.h>
 #include <res/melpontro/sounds/sndXboxNotify.ogg.h>
 
@@ -31,10 +31,10 @@ enum class EmbeddedSound
     SysActStgPauseWinOpen,
     AmongUs,
     BadApple,
+    Jarate,
     Mystery,
     Push,
     Sans,
-    Splash,
     VineBoom,
     XboxNotify,
     Count
@@ -58,10 +58,10 @@ static const std::unordered_map<std::string_view, EmbeddedSound> g_embeddedSound
     { "sys_actstg_pausewinopen", EmbeddedSound::SysActStgPauseWinOpen },
     { "AmongUs", EmbeddedSound::AmongUs },
     { "BadApple", EmbeddedSound::BadApple },
+    { "Jarate", EmbeddedSound::Jarate },
     { "Mystery", EmbeddedSound::Mystery },
     { "Push", EmbeddedSound::Push },
     { "Sans", EmbeddedSound::Sans },
-    { "Splash", EmbeddedSound::Splash },
     { "VineBoom", EmbeddedSound::VineBoom },
     { "XboxNotify", EmbeddedSound::XboxNotify }
 };
@@ -128,9 +128,9 @@ static void PlayEmbeddedSound(EmbeddedSound s)
                 soundData = g_sndSans;
                 soundDataSize = sizeof(g_sndSans);
                 break;
-            case EmbeddedSound::Splash:
-                soundData = g_sndSplash;
-                soundDataSize = sizeof(g_sndSplash);
+            case EmbeddedSound::Jarate:
+                soundData = g_sndJarate;
+                soundDataSize = sizeof(g_sndJarate);
                 break;
             case EmbeddedSound::VineBoom:
                 soundData = g_sndVineBoom;
