@@ -725,8 +725,6 @@ static const char* g_words[] =
 "buckskin",
 "bucktooth",
 "buckwheat",
-"buddhism",
-"buddhist",
 "budding",
 "buddy",
 "budget",
