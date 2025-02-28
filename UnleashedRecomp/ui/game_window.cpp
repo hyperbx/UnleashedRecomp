@@ -148,7 +148,6 @@ int Window_OnSDLEvent(void*, SDL_Event* event)
 
         case SDL_USER_EVILSONIC:
             GameWindow::s_isIconNight = event->user.code;
-            GameWindow::SetIcon(GameWindow::s_isIconNight);
             break;
     }
 
@@ -196,7 +195,6 @@ void GameWindow::Init(const char* sdlVideoDriver)
         SDL_ShowCursor(SDL_DISABLE);
 
     SetDisplay(Config::Monitor);
-    SetIcon();
     SetTitle();
 
     SDL_SetWindowMinimumSize(s_pWindow, MIN_WIDTH, MIN_HEIGHT);
@@ -257,37 +255,9 @@ SDL_Surface* GameWindow::GetIconSurface(void* pIconBmp, size_t iconSize)
     return surface;
 }
 
-void GameWindow::SetIcon(void* pIconBmp, size_t iconSize)
-{
-    if (auto icon = GetIconSurface(pIconBmp, iconSize))
-    {
-        SDL_SetWindowIcon(s_pWindow, icon);
-        SDL_FreeSurface(icon);
-    }
-}
-
-void GameWindow::SetIcon(bool isNight)
-{
-    if (isNight)
-    {
-        SetIcon(g_game_icon_night, sizeof(g_game_icon_night));
-    }
-    else
-    {
-        SetIcon(g_game_icon, sizeof(g_game_icon));
-    }
-}
-
 const char* GameWindow::GetTitle()
 {
-    if (Config::UseOfficialTitleOnTitleBar)
-    {
-        return Config::Language == ELanguage::Japanese
-            ? "SONIC WORLD ADVENTURE"
-            : "SONIC UNLEASHED";
-    }
-
-    return "Unleashed Recompiled";
+    return "Xenia-canary (canary_experimental@60318a5d on Feb 26 2025) | [53450812 v1.02] SONIC UNLEASHED <Vulkan - FBO - HEAVILY INCOMPLETE, early development>";
 }
 
 void GameWindow::SetTitle(const char* title)
@@ -332,7 +302,6 @@ bool GameWindow::SetFullscreen(bool isEnabled)
         SDL_SetWindowFullscreen(s_pWindow, 0);
         SDL_ShowCursor(SDL_ENABLE);
 
-        SetIcon(GameWindow::s_isIconNight);
         SetDimensions(Config::WindowWidth, Config::WindowHeight, Config::WindowX, Config::WindowY);
     }
 

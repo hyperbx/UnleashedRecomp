@@ -26,8 +26,6 @@ public:
     static inline bool s_isChangingDisplay;
 
     static SDL_Surface* GetIconSurface(void* pIconBmp, size_t iconSize);
-    static void SetIcon(void* pIconBmp, size_t iconSize);
-    static void SetIcon(bool isNight = false);
     static const char* GetTitle();
     static void SetTitle(const char* title = nullptr);
     static void SetTitleBarColour();
