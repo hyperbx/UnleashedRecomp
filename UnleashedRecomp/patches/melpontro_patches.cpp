@@ -232,6 +232,7 @@ void MelpontroPatches::Update()
     if (keyboardState[SDL_SCANCODE_F5] && !g_isBadAppleQueued)
     {
         EmbeddedPlayer::Play("Jarate");
+
         g_badAppleQueueTime = App::s_time;
         g_isBadAppleQueued = true;
     }

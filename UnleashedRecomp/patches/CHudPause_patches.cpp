@@ -17,6 +17,7 @@ bool g_isClosed;
 bool g_isAchievementsAccessed = false;
 bool g_isAchievementsExitFinished = false;
 bool g_isOptionsAccessed = false;
+bool g_isOptionsMysteryReopened = false;
 
 ESpriteType g_spriteType = ESpriteType::SonicDash;
 float g_spriteX = 0.0f;
@@ -83,8 +84,6 @@ bool InjectMenuBehaviour(uint32_t pThis, uint32_t count)
             EmbeddedPlayer::Play("Mystery");
 
             g_isOptionsAccessed = true;
-
-            GuestToHostFunction<int>(0x824AFD28, pHudPause, 0, 0, 0, 1);
 
             if (pHudPause->m_rcBg1Select)
                 pHudPause->m_rcBg1Select->SetHideFlag(true);
@@ -173,6 +172,12 @@ PPC_FUNC(sub_824B0930)
 
             g_isAchievementMenuOutro = true;
         }
+    }
+    else if (g_isOptionsAccessed && !g_isOptionsMysteryReopened)
+    {
+        GuestToHostFunction<int>(sub_824AFD28, pHudPause, 0, 0, 0, 1);
+        __imp__sub_824B0930(ctx, base);
+        g_isOptionsMysteryReopened = true;
     }
     else if (OptionsMenu::s_isVisible && OptionsMenu::s_isPause)
     {
