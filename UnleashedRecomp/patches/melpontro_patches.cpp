@@ -6,6 +6,8 @@
 
 SWA::CGameModeStage* g_pGameModeStage;
 
+bool g_isRequestedLoading;
+
 bool g_showMessage;
 bool g_showAdabatMessage;
 size_t g_messageIndex;
@@ -98,18 +100,10 @@ void Mel_MsgRequestStartLoadingMidAsmHook(PPCRegister& pThis, PPCRegister& r4)
     if (g_isBadAppleQueued || (scrollingTextDist(rng) && *pType == 3))
         *pType = 0;
 
-    if (*pType == 0)
-    {
-        g_loadCount++;
-    }
-    else
-    {
+    if (*pType != 0 || g_isRequestedLoading)
         return;
-    }
 
-    // Prevent additional calls with type 0 running this code.
-    if (g_loadCount > 1)
-        return;
+    g_isRequestedLoading = true;
 
     FreeStringPool();
 
@@ -159,12 +153,13 @@ bool Mel_VideoStringSequenceWaitMidAsmHook(PPCRegister& pThis)
 
 void Mel_SetLoadingStringsMidAsmHook(PPCRegister& pThis, PPCRegister& pCSDText, PPCRegister& pUpdateInfo, PPCRegister& r30)
 {
+    auto pLoading = (SWA::CLoading*)g_memory.Translate(pThis.u32);
     auto deltaTime = *(be<float>*)g_memory.Translate(pUpdateInfo.u32);
     auto outroTime = *(be<float>*)g_memory.Translate(pThis.u32 + 0x140);
     auto pScrollIndex = (be<uint32_t>*)g_memory.Translate(pThis.u32 + 0x124);
 
-    if (outroTime > 0.0f && outroTime < 0.01f)
-        g_loadCount = 0;
+    if (!pLoading->m_IsVisible)
+        g_isRequestedLoading = false;
 
     if (g_videoStringSequence.IsPlaying())
     {
