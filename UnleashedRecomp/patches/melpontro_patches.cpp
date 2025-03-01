@@ -79,7 +79,6 @@ void FreeStringPool()
 
 std::mt19937 GetRandom()
 {
-    std::tuple<uint32_t, size_t> tpl{};
     std::random_device rd;
     std::mt19937 rd_gen(rd());
 
