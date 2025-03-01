@@ -123,17 +123,16 @@ void Mel_MsgRequestStartLoadingMidAsmHook(PPCRegister& pThis, PPCRegister& r4)
 
         if (singleOrMultiDist(rng))
         {
-            std::shuffle(g_multiStringSequences.begin(), g_multiStringSequences.end(), rng);
+            std::uniform_int_distribution<> dist(0, g_multiStringSequences.size() - 1);
+            int index = dist(rng);
 
-            CreateStringPool(g_multiStringSequences[0].Strings);
+            CreateStringPool(g_multiStringSequences[index].Strings);
 
-            if (g_multiStringSequences[0].Callback)
-                g_multiStringSequences[0].Callback();
+            if (g_multiStringSequences[index].Callback)
+                g_multiStringSequences[index].Callback();
         }
         else
         {
-            std::shuffle(g_singleStringSequences.begin(), g_singleStringSequences.end(), rng);
-        
             CreateStringPool(g_singleStringSequences);
         }
     }
@@ -160,7 +159,6 @@ void Mel_SetLoadingStringsMidAsmHook(PPCRegister& pThis, PPCRegister& pCSDText, 
 {
     auto pLoading = (SWA::CLoading*)g_memory.Translate(pThis.u32);
     auto deltaTime = *(be<float>*)g_memory.Translate(pUpdateInfo.u32);
-    auto outroTime = *(be<float>*)g_memory.Translate(pThis.u32 + 0x140);
     auto pScrollIndex = (be<uint32_t>*)g_memory.Translate(pThis.u32 + 0x124);
 
     if (!pLoading->m_IsVisible)

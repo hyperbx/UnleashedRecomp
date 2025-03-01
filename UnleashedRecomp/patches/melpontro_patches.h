@@ -199,7 +199,7 @@ inline std::vector<MultiStringSequence> g_multiStringSequences =
 {
     { { "nullptr" } },
     { { "Graphics device lost (probably due to an internal error)" } },
-    { { "Fatal Crash Intercepted!" }, []() { EmbeddedPlayer::Play("XboxNotify"); }},
+    { { "Fatal Crash Intercepted!" }, []() { EmbeddedPlayer::Play("XboxNotify"); } },
     {
         {
             " ",
