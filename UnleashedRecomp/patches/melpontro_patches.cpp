@@ -92,7 +92,7 @@ void Mel_MsgRequestStartLoadingMidAsmHook(PPCRegister& pThis, PPCRegister& r4)
     auto pType = (be<uint32_t>*)g_memory.Translate(r4.u32 + 0x18);
     auto rng = GetRandom();
 
-    LOGFN("Loading type: {}", pType->get());
+    LOGFN("Loading Type (Original): {}", pType->get());
 
     std::bernoulli_distribution scrollingTextDist(0.5);
 
@@ -100,10 +100,15 @@ void Mel_MsgRequestStartLoadingMidAsmHook(PPCRegister& pThis, PPCRegister& r4)
     if (g_isBadAppleQueued || (scrollingTextDist(rng) && *pType == 3))
         *pType = 0;
 
-    if (*pType != 0 || g_isRequestedLoading)
+    if (g_isRequestedLoading)
         return;
 
     g_isRequestedLoading = true;
+
+    if (*pType != 0)
+        return;
+
+    LOGFN("Loading Type (Forced): {}", pType->get());
 
     FreeStringPool();
 
