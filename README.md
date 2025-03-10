@@ -7,7 +7,7 @@
 This branch was used for [Melpontro](https://www.youtube.com/@Melpontro)'s [Knuckles Unleashed & Sonic Unleashed Modding Shenanigans - 10th Anniversary Special](https://www.youtube.com/watch?v=smmN-JopYPk) live stream.
 
 ### Contents
-- Custom loading screen text (impl. by [Hyper](https://github.com/hyperbx), text by various others)
+- Custom loading screen text (impl. by [Hyper](https://github.com/hyperbx), sounds by [PTKay](https://github.com/PTKay), text by various others)
 - Entrance gate messages (impl. by [Hyper](https://github.com/hyperbx), text by various others)
 - Stage-specific hacks (e.g. Clock Town results CSB exclusion) (impl. by [Skyth](https://github.com/blueskythlikesclouds))
 - Pause menu gags (e.g. Options and Achievements buttons disappearing) (impl. by [Hyper](https://github.com/hyperbx))
