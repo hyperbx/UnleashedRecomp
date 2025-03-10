@@ -2,6 +2,18 @@
     <img src="https://raw.githubusercontent.com/hedge-dev/UnleashedRecompResources/refs/heads/main/images/logo/Logo.png" width="512"/>
 </p>
 
+# Melpontro Edition
+
+This branch was used for [Melpontro](https://www.youtube.com/@Melpontro)'s [Knuckles Unleashed & Sonic Unleashed Modding Shenanigans - 10th Anniversary Special](https://www.youtube.com/watch?v=smmN-JopYPk) live stream.
+
+### Contents
+- Custom loading screen text (impl. by [Hyper](https://github.com/hyperbx), text by various others)
+- Entrance gate messages (impl. by [Hyper](https://github.com/hyperbx), text by various others)
+- Stage-specific hacks (e.g. Clock Town results CSB exclusion) (impl. by [Skyth](https://github.com/blueskythlikesclouds))
+- Pause menu gags (e.g. Options and Achievements buttons disappearing) (impl. by [Hyper](https://github.com/hyperbx))
+- Keyboard QTEs (impl. by [Skyth](https://github.com/blueskythlikesclouds))
+- Bad Apple (impl. by [Hyper](https://github.com/hyperbx), frames generated from [this video](https://www.youtube.com/watch?v=7XijCqWb5TI))
+
 ---
 
 Unleashed Recompiled is an unofficial PC port of the Xbox 360 version of Sonic Unleashed created through the process of static recompilation. The port offers Windows and Linux support with numerous built-in enhancements such as high resolutions, ultrawide support, high frame rates, improved performance and modding.
